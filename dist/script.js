@@ -1,1 +1,1 @@
-"use strict";(()=>{})();
+"use strict";(()=>{var c=[];for(let l=0;l<10;l++){c[l]=[];let r="";for(let e=0;e<10;e++)c[l][e]=0,r+=c[l][e]+" "}function m(){return{board:c,placeShip(l,r,e){if(r.row===e.row&&b(r.row,r.col)&&b(e.row,e.col))for(let o=r.col;o<=e.col;o++)c[r.row][o]=l.shipObject[o-r.col];else if(r.col===e.col&&b(r.row,r.col)&&b(e.row,e.col))for(let o=r.row;o<=e.row;o++)c[o][r.col]=l.shipObject[o-r.row]}}}function b(l,r){return l>=0&&l<10&&r>=0&&r<10}var w=m();console.log(w.board);})();
