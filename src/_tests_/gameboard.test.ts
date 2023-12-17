@@ -1,4 +1,4 @@
-import * as TestFunction from "../gameboard";
+import * as TestFunction from "../objects/gameboard";
 
 const { isValidMove, gameboard } =
   jest.requireActual<typeof TestFunction>("../gameboard");

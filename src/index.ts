@@ -1,2 +1,5 @@
-import * as ship from './ship';
-import * as gameboard from './gameboard';
+import { startGame } from "./pages/startGame";
+
+document.addEventListener("DOMContentLoaded", function () {
+    startGame();
+});
