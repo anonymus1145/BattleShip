@@ -1,15 +1,16 @@
-export function shipObject() {
+export function ship(imput: number) {
   return {
-    length: 0,
+    length: imput,
     hits: 0,
-    sunk: false,
+    isSunck: false,
     hit() {
       this.hits += 1;
-    },
-    isSunk() {
       if (this.hits === this.length) {
-        this.sunk = true;
+        this.isSunck = true;
+        console.log("Ship is sunck");
+      } else {
+        console.log("Ship hit");
       }
-    }
+    },
   };
 }
