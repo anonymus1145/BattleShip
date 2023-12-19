@@ -1,12 +1,21 @@
-export function ship(imput: number) {
+export type Ship = {
+  length: number;
+  coordinates: { row: number; col: number }[];
+  hits: number;
+  isSunk: boolean;
+  hit(): void;
+};
+
+export const createShip = (length: number): Ship => {
   return {
-    length: imput,
+    length: length,
+    coordinates: [] as { row: number; col: number }[],
     hits: 0,
-    isSunck: false,
+    isSunk: false,
     hit() {
       this.hits += 1;
       if (this.hits === this.length) {
-        this.isSunck = true;
+        this.isSunk = true;
         console.log("Ship is sunck");
       } else {
         console.log("Ship hit");
