@@ -9,3 +9,23 @@ describe('Ship', () => {
         expect(newShip.length).toBe(5);
     })
 })
+
+describe('Ship is hit', () => { 
+    it('should have 1 hit', () => {
+        const newShip = ship(5);
+        newShip.hit();
+        expect(newShip.hits).toBe(1);
+    })
+})
+
+describe('Ship is sunck', () => {
+    it('should be sunck', () => {
+        const newShip = ship(5);
+        newShip.hit();
+        newShip.hit();
+        newShip.hit();
+        newShip.hit();
+        newShip.hit();
+        expect(newShip.isSunck).toBe(true);
+    })
+})
