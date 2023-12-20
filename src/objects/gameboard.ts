@@ -1,6 +1,6 @@
 import { Ship, createShip } from "../objects/ship";
 
-interface Gameboard {
+export interface Gameboard {
   [x: string]: any;
   placeShip: (
     ship: Ship,
