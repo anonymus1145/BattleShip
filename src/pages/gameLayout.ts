@@ -1,7 +1,3 @@
-import * as board from "../objects/gameboard";
-
-export const warBoard = board.buildBoard();
-
 export function gameLayout() {
     let body = document.querySelector('body');
 
@@ -27,18 +23,21 @@ export function gameLayout() {
     computerBoard.setAttribute('id', 'computerBoard');
     computerBoard.classList.add('grid','column-gap-0','border-2', 'border-black','mx-auto','my-auto');
     createBoard(computerBoard);
-    gameLayout.appendChild(computerBoard);   
+    gameLayout.appendChild(computerBoard);
+
 }
 
 function createBoard(board: any ) {
-    warBoard.forEach((position, i) => {
-        position.forEach((element, j) => {
+    for (let i = 0; i < 10; i++) {
+        for (let j = 0; j < 10; j++) {
             let square = document.createElement("div");
             square.classList.add('w-10', 'h-10', 'border-2', 'border-black');
+            square.setAttribute("row", `${i}`);
+            square.setAttribute("col", `${j}`);
             square.setAttribute("id", `${i}${j}`);
             square.innerHTML = '';
             board.appendChild(square);
-        })
+        }
         board.style.gridTemplateColumns = 'repeat(10, [col-start] 1fr [col-end])';
-    });
+    }
 }
