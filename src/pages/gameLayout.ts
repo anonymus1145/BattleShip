@@ -34,7 +34,7 @@ function createBoard(board: any ) {
             square.classList.add('w-10', 'h-10', 'border-2', 'border-black');
             square.setAttribute("row", `${i}`);
             square.setAttribute("col", `${j}`);
-            square.setAttribute("id", `${i}${j}`);
+            square.setAttribute("id", 'square');
             square.innerHTML = '';
             board.appendChild(square);
         }

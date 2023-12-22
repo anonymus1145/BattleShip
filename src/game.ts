@@ -37,6 +37,3 @@ export const createGame = (): Game => {
         }
     }
 }
-
-const newGame = createGame();
-newGame.playGame();

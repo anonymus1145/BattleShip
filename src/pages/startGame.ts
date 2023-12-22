@@ -44,15 +44,11 @@ export function startGame() {
     let startButton = document.createElement('button');
     startButton.classList.add('p-3', 'bg-black', 'rounded-full', 'text-white', 'w-full', 'font-semibold');
     startButton.textContent = 'Start Game';
-    startButton.addEventListener('click', onclick);
+    startButton.setAttribute('id', 'startButton');
+    startButton.addEventListener('click', () => {
+        modal.remove();
+    })
     modalContent6.appendChild(startButton);
 
     body?.appendChild(modal);
-}
-
-// Load the game
-function onclick() {
-    const body = document.querySelector('body');
-    let modal = document.getElementById('modal');
-    body?.removeChild(modal!);
 }
