@@ -1,4 +1,4 @@
-import { Ship, createShip } from "../objects/ship";
+import { Ship } from "../objects/ship";
 
 export interface Gameboard {
   [x: string]: any;
@@ -13,10 +13,11 @@ export interface Gameboard {
 }
 
 
-export const createGameboard = (): Gameboard => {
+export const createGameboard = (boardName: string ): Gameboard => {
   const grid: string[][] = Array.from({ length: 10 }, () => Array(10).fill(""));
   const ships: Ship[] = [];
   const missedAttacks: { row: number; col: number }[] = [];
+  let board = document.getElementById(`${boardName}`); // Comment this for testing
 
   const placeShip = (ship: Ship, row: number, col: number, isVertical: boolean): void => {
     if (isPlacementValid(ship, row, col, isVertical)) {
@@ -26,6 +27,7 @@ export const createGameboard = (): Gameboard => {
         const currentRow = isVertical ? row + i : row;
         const currentCol = isVertical ? col : col + i;
         grid[currentRow][currentCol] = '#'; // represents a ship cell
+        board?.querySelector(`[row="${currentRow}"][col="${currentCol}"]`)?.classList.add("bg-green-500"); // add green background to the ship cells -> should be commented for testing
         shipCoordinates.push({ row: currentRow, col: currentCol });
       }
 

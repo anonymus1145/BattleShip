@@ -7,8 +7,8 @@ interface Game {
   }
 
 export const createGame = (): Game => {
-    const playerGameboard: Gameboard = createGameboard();
-    const computerGameboard: Gameboard = createGameboard();
+  const playerGameboard: Gameboard = createGameboard("playerBoardId");
+  const computerGameboard: Gameboard = createGameboard("computerBoardId");
 
     // We place some ships on the player's gameboard and some on the computer's
     playerGameboard.placeShip(createShip(3), 0, 0, true);
@@ -38,7 +38,7 @@ export const createGame = (): Game => {
     }
 }
 
-export const returnLength = () => {
+export const returnShipPosition = () => {
     let numClicks = 0;
     return new Promise((resolve) => {
       const playerBoard = document.getElementById("playerBoard");
@@ -51,26 +51,29 @@ export const returnLength = () => {
       const clickHandler = (event: any) => {
         if (numClicks === 0) {
           firstSquare = event.target as HTMLElement;
-          firstSquare.classList.add("bg-green-500");
   
         } else if (numClicks === 1) {
           secondSquare = event.target as HTMLElement;
-          secondSquare.classList.add("bg-red-500");
   
           if (firstSquare.getAttribute("row") === secondSquare.getAttribute("row")) {
             length = Math.abs(Number(firstSquare.getAttribute("col")) - Number(secondSquare.getAttribute("col")));
-            isVertical = true;
-            lengths.push(length + 1, isVertical);
+            isVertical = false;
+            let squareStartRow = Number(firstSquare.getAttribute("row"));
+            let squareStartCol = Number(firstSquare.getAttribute("col"));
+            lengths.push(length + 1, isVertical, squareStartRow, squareStartCol);
+
           } else if (firstSquare.getAttribute("col") === secondSquare.getAttribute("col")) {
             length = Math.abs(Number(firstSquare.getAttribute("row")) - Number(secondSquare.getAttribute("row")));
-            isVertical = false;
-            lengths.push(length + 1, isVertical);
+            isVertical = true;
+            let squareStartRow = Number(firstSquare.getAttribute("row"));
+            let squareStartCol = Number(firstSquare.getAttribute("col"));
+            lengths.push(length + 1, isVertical, squareStartRow, squareStartCol);
           }
         }
         numClicks++;
   
         // If enough clicks have occurred, resolve the promise with the array of lengths
-        if (lengths.length === numClicks) {
+        if (numClicks === 2) {
           playerBoard?.removeEventListener("click", clickHandler);
           resolve(lengths);
         }
@@ -79,3 +82,7 @@ export const returnLength = () => {
       playerBoard?.addEventListener("click", clickHandler);
     });
   };
+
+  export const randomRowCol = () => {
+    return Math.floor(Math.random() * 9) + 1;
+  }
