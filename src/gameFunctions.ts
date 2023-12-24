@@ -1,14 +1,14 @@
 import { createGameboard, Gameboard } from './objects/gameboard';
 import { createPlayer, createComputer } from './objects/player';
-import { createShip } from './objects/ship';
+import { createShip, Ship } from './objects/ship';
 
 interface Game {
     playGame(): void;
   }
 
 export const createGame = (): Game => {
-  const playerGameboard: Gameboard = createGameboard("playerBoardId");
-  const computerGameboard: Gameboard = createGameboard("computerBoardId");
+  const playerGameboard: Gameboard = createGameboard();
+  const computerGameboard: Gameboard = createGameboard();
 
     // We place some ships on the player's gameboard and some on the computer's
     playerGameboard.placeShip(createShip(3), 0, 0, true);
@@ -85,4 +85,12 @@ export const returnShipPosition = () => {
 
   export const randomRowCol = () => {
     return Math.floor(Math.random() * 9) + 1;
+  }
+
+  export const displayShips = (board: HTMLElement | null, ship: Ship, row: number, col: number, isVertical: boolean) => {
+    for (let j = 0; j < ship.length; j++) {
+      const currentRow = isVertical ? row + j : row;
+      const currentCol = isVertical ? col : col + j;
+      board?.querySelector(`[row="${currentRow}"][col="${currentCol}"]`)?.classList.add("bg-green-500"); // add green background to the ship cells
+    }
   }

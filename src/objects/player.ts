@@ -5,7 +5,8 @@ export interface Player {
 }
 
 export interface Computer {
-  attack(): void;
+  attack(): void,
+  array: number[],
 }
 
 export const createPlayer = (gameboard: Gameboard): Player => {
@@ -19,8 +20,9 @@ export const createPlayer = (gameboard: Gameboard): Player => {
 // Computer player -> extends player
 export const createComputer = (gameboard: Gameboard): Computer => {
   const useCoordinates: { row: number; col: number }[] = [];
-  let attack: { row: any; col: any; };
+  let attack: { row: number; col: number; };
   const availableCoordinates = getAvailableCoordinates();
+  const array1: number[] = [];
 
     if (availableCoordinates.length > 0) {
       const randomIndex = Math.floor(
@@ -36,7 +38,9 @@ export const createComputer = (gameboard: Gameboard): Computer => {
   return {
     attack(): void {
       gameboard.receiveAttack(attack.row, attack.col);
-    }
+      array1.push(attack.row, attack.col);
+    },
+    array: array1
   };
 };
 
