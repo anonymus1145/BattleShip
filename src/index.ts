@@ -3,11 +3,20 @@ import { startGame, readyToStart } from "./pages/startGame";
 import { createGameboard, Gameboard } from "./objects/gameboard";
 import { createPlayer, createComputer } from "./objects/player";
 import { createShip } from "./objects/ship";
-import { returnShipPosition, randomRowCol, displayShips } from "./gameFunctions";
+import {
+  returnShipPosition,
+  randomRowCol,
+  displayShips,
+  playGame,
+} from "./gameFunctions";
 
 document.addEventListener("DOMContentLoaded", async () => {
-  startGame();
-  gameLayout();
+  await startGame().then(() => {
+    gameLayout().then(() => {
+      console.log("gameLayout ended");
+      setTimeout(() => alert("Let's place your ships, first ship is one square long!"), 1000);
+    });
+  });
 
   // Create two gameboards, one for the player and one for the computer
   const playerBoard = document.getElementById("playerBoard");
@@ -17,11 +26,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   const computerGameboard: Gameboard = createGameboard();
 
   // Create two players, one for the player and one for the computer
-  const player = createPlayer(playerGameboard);
-  const computer = createComputer(computerGameboard);
+  const player = createPlayer(computerGameboard); // Player will atack the computer's gameboard
+  const computer = createComputer(playerGameboard);
 
   // Place the ships on the player's gameboard
-  for (let i = 1; i < 6; i++) {
+  for (let i = 1; i < 2; i++) {
+    // Change to test -> in place of 2 is 6 normaly
     // Return length of ship and if it is vertical
     let length: any = await returnShipPosition();
     // Check if the ship is within the boundaries of the gameboard
@@ -30,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       i--;
     } else {
       if (i >= 1 && i < 5) {
-        alert ('Place the next ship of ' + (i + 1) + ' square length!');
+        alert("Place the next ship of " + (i + 1) + " square length!");
       }
       let ship = createShip(i);
       playerGameboard.placeShip(ship, length[2], length[3], length[1]);
@@ -38,15 +48,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // Place the ships randomly on the computer's gameboard
-  for (let i = 1; i < 6; i++) {
+  for (let i = 1; i < 2; i++) {
+    // Change to test -> in place of 2 is 6 normaly
     // Return length of ship and if it is vertical
     let array: number[][] = [];
     let row = randomRowCol();
     let col = randomRowCol();
     let isVertical: boolean = false;
     let rowColArray: number[] = [row, col];
-    
+
     array.forEach((value: number[]) => {
       if (value === rowColArray) {
         row = randomRowCol();
@@ -54,7 +64,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         rowColArray = [row, col];
         array.push(rowColArray);
       }
-    })
+    });
 
     if (rowColArray[0] > 6) {
       isVertical = false;
@@ -67,54 +77,42 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
       isVertical = true;
     }
-   
-   let ship = createShip(i);
-    computerGameboard.placeShip(ship, rowColArray[0], rowColArray[1], isVertical);
-    if (computerGameboard.placeShip(ship, rowColArray[0], rowColArray[1], isVertical) === null) {
-      i--;
-    }
-    displayShips(computerBoard, ship, rowColArray[0], rowColArray[1], isVertical);
+
+    let ship = createShip(i);
+    computerGameboard.placeShip(
+      ship,
+      rowColArray[0],
+      rowColArray[1],
+      isVertical
+    );
+    displayShips(  //-> Uncomment if you want to see where the ships of the computer are placed  
+      computerBoard,
+      ship,
+      rowColArray[0],
+      rowColArray[1],
+      isVertical
+    );
   }
 
-  // Start the game
-  readyToStart();
-  let game = true;
-  while(game === true) {
-    alert("Chose the square you want to attack");
-    computerBoard?.addEventListener("click", (event: any) => {
-      let row = event.target.getAttribute("row");
-      let col = event.target.getAttribute("col");
-      player.attack(row, col);
+  await readyToStart().then( async () => {
+    console.log("readyToStart ended");
+    let gameOver = false;
+    alert("Choose your target!");
 
-      computerGameboard.receiveAttack(row, col);
-      if (computerGameboard.receiveAttack(row, col) !== null) {
-        event.target.classList.add("bg-red-500");
-        event.target.classList.remove("bg-green-500");
-      } else {
-        event.target.classList.add("bg-gray-500");
+    while (!gameOver) {
+       
+    await playGame(computerBoard, player, computer).then( async () => {
+      if (computerGameboard.areAllShipsSunk() === true) {
+        alert("You win!");
+        gameOver = true;
       }
-
-      if (computerGameboard.areAllShipsSunk()) {
-        alert("You won!");
-        game = false;
-        // TODO: Add a button to restart the game and anounce that the game is over!
-      }
-    })
-
-    computer.attack();
-    playerGameboard.receiveAttack(computer.array[0], computer.array[1]);
-
-    if (playerGameboard.receiveAttack(computer.array[0], computer.array[1]) !== null) {
-      playerBoard?.querySelector(`[row="${computer.array[0]}"][col="${computer.array[1]}"]`)?.classList.remove("bg-green-500");
-      playerBoard?.querySelector(`[row="${computer.array[0]}"][col="${computer.array[1]}"]`)?.classList.add("bg-red-500");
-  }
-
-    if (playerGameboard.areAllShipsSunk()) {
-      alert("Computer won!");
-      game = false;
-      // TODO: Add a button to restart the game and anounce that the game is over!
+      await playGame(playerBoard, player, computer).then(() => {
+        if (playerGameboard.areAllShipsSunk() === true) {
+          alert("Computer win!");
+          gameOver = true;
+        }
+      })
+    }) 
     }
-
-
-  }
+  });
 });

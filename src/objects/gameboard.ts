@@ -34,6 +34,7 @@ export const createGameboard = (): Gameboard => {
     } else {
       console.log('Invalid ship placement');
     }
+    console.log(ships); // For testing purposes -> trebuie sa apara in consola la fiecare ship placement
   };
 
   const receiveAttack = (row: number, col: number): void => {
@@ -75,7 +76,24 @@ export const createGameboard = (): Gameboard => {
     return true;
   };
 
-  const areAllShipsSunk = (): boolean => ships.every((ship) => ship.isSunk === true);
+  const areAllShipsSunk = (): boolean => {
+    let snuk = 0;
+    ships.forEach((ship) => {
+      if (ship.isSunk === true) {
+        console.log('Not all ships are sunk');
+        snuk++;
+      }
+    })
+
+    console.log(ships);
+
+    if (snuk === 1) {
+      console.log('All ships are sunk');
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   return { placeShip, receiveAttack, areAllShipsSunk, grid, ships, missedAttacks };
 };

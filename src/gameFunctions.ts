@@ -1,40 +1,39 @@
-import { createGameboard, Gameboard } from './objects/gameboard';
-import { createPlayer, createComputer } from './objects/player';
 import { createShip, Ship } from './objects/ship';
+import { Player, Computer } from './objects/player';
 
-interface Game {
-    playGame(): void;
-  }
 
-export const createGame = (): Game => {
-  const playerGameboard: Gameboard = createGameboard();
-  const computerGameboard: Gameboard = createGameboard();
 
-    // We place some ships on the player's gameboard and some on the computer's
-    playerGameboard.placeShip(createShip(3), 0, 0, true);
-    computerGameboard.placeShip(createShip(3), 1, 1, false);
-
-    const player = createPlayer(playerGameboard);
-    const computer = createComputer(computerGameboard);
-
-    return {
-        playGame(): void {
-            while (true) {
-                player.attack(0, 0);
-                
-                if (computerGameboard.areAllShipsSunk()) {
-                    console.log('Player won!');
-                    break;
-                }
-
-                computer.attack();
-
-                if (playerGameboard.areAllShipsSunk()) {
-                    console.log('Computer won!');
-                    break;
-                }
-            }
+export const playGame = async (board: HTMLElement | null, player: Player, computer: Computer) => {
+    if (board?.id === "computerBoard") {
+      return new Promise<void>((resolve) => {
+        const clickHandler = (event: any) => {
+          let row = event.target.getAttribute("row");
+          let col = event.target.getAttribute("col");
+          player.attack(row, col);
+          if (event.target.classList.contains("bg-green-500")) {
+            event.target.classList.remove("bg-green-500");
+            event.target.classList.add("bg-red-500");
+          } else {
+            event.target.classList.add("bg-gray-500");
+          }
+          board?.removeEventListener("click", clickHandler);
+          resolve();
         }
+        board?.addEventListener("click", clickHandler)
+      })
+   
+    } else {
+      return new Promise<void>((resolve) => {
+        computer.attack();
+
+        if (board?.querySelector(`[row="${computer.array[0]}"][col="${computer.array[1]}"]`)?.classList.contains("bg-green-500")) {
+          board?.querySelector(`[row="${computer.array[0]}"][col="${computer.array[1]}"]`)?.classList.remove("bg-green-500");
+          board?.querySelector(`[row="${computer.array[0]}"][col="${computer.array[1]}"]`)?.classList.add("bg-red-500");
+        } else {
+          board?.querySelector(`[row="${computer.array[0]}"][col="${computer.array[1]}"]`)?.classList.add("bg-gray-500");
+        }
+        resolve();
+      })
     }
 }
 

@@ -1,5 +1,6 @@
-export function gameLayout() {
-  
+export async function gameLayout() {
+  console.log("gameLayout called");
+  return new Promise<void>((resolve) => {
     let body = document.querySelector("body");
 
     const title = document.createElement("h1");
@@ -44,7 +45,9 @@ export function gameLayout() {
     );
     createBoard(computerBoard);
     gameLayout.appendChild(computerBoard);
-
+    
+    resolve();
+  });
 }
 
 function createBoard(board: any) {
