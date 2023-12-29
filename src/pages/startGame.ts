@@ -92,6 +92,7 @@ export async function readyToStart() {
 
   let descriptionP = document.createElement('p');
   descriptionP.classList.add('text-gray-600');
+  descriptionP.textContent = 'Remember, the goal of this game is to sink all of your opponent\'s ships before they sink yours. If you hit a ship in the head, you sink it. Good luck!';
   modalContent5.appendChild(descriptionP);
 
   let modalContent6 = document.createElement('div');

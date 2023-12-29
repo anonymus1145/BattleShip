@@ -1,5 +1,6 @@
 import { Ship } from "../objects/ship";
 
+
 export interface Gameboard {
   [x: string]: any;
   placeShip: (
@@ -20,34 +21,45 @@ export const createGameboard = (): Gameboard => {
 
   const placeShip = (ship: Ship, row: number, col: number, isVertical: boolean): void => {
     if (isPlacementValid(ship, row, col, isVertical)) {
-      const shipCoordinates: { row: number; col: number }[] = [];
+      let shipCoordinates: { row: number; col: number };
 
       for (let i = 0; i < ship.length; i++) {
-        const currentRow = isVertical ? row + i : row;
-        const currentCol = isVertical ? col : col + i;
+        let currentRow = isVertical ? row + i : row;
+        let currentCol = isVertical ? col : col + i;
         grid[currentRow][currentCol] = '#'; // represents a ship cell
-        shipCoordinates.push({ row: currentRow, col: currentCol });
+        shipCoordinates = { row: currentRow, col: currentCol };
+        ship.coordinates = shipCoordinates;
       }
 
-      ship.coordinates = shipCoordinates;
       ships.push(ship);
+      console.log(ship);
+     
     } else {
       console.log('Invalid ship placement');
     }
-    console.log(ships); // For testing purposes -> trebuie sa apara in consola la fiecare ship placement
   };
 
   const receiveAttack = (row: number, col: number): void => {
     const attackedCell = grid[row][col];
 
-    if (attackedCell === '#') {
+    if (attackedCell == '#') {
       // Hit a ship
-      const hitShip = ships.find((ship) =>
-        ship.coordinates.some((coord) => coord.row === row && coord.col === col)
-      );
-      if (hitShip) {
-        hitShip.hit();
+      alert('Hit a ship!');
+   
+      const shipHit = (event: any) => {
+        event.target.classList.add('bg-red-500');
+        removeEventListener('click', shipHit);
       }
+      addEventListener('click', shipHit);
+
+      // If the ship is hit in the head
+      ships.forEach((ship) => {
+        if (ship.coordinates.row == row && ship.coordinates.col == col) {
+          ship.isSunk = true;
+          alert("Head of the ship is hit!");
+        }
+      })
+
     } else {
       // Missed the ship
       missedAttacks.push({ row, col });
@@ -79,15 +91,13 @@ export const createGameboard = (): Gameboard => {
   const areAllShipsSunk = (): boolean => {
     let snuk = 0;
     ships.forEach((ship) => {
-      if (ship.isSunk === true) {
-        console.log('Not all ships are sunk');
+      //console.log(ship.isSunk);
+      if (ship.isSunk == true) {
         snuk++;
       }
     })
 
-    console.log(ships);
-
-    if (snuk === 1) {
+    if (snuk == ships.length) {
       console.log('All ships are sunk');
       return true;
     } else {

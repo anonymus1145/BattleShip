@@ -26,11 +26,13 @@ export const playGame = async (board: HTMLElement | null, player: Player, comput
       return new Promise<void>((resolve) => {
         computer.attack();
 
-        if (board?.querySelector(`[row="${computer.array[0]}"][col="${computer.array[1]}"]`)?.classList.contains("bg-green-500")) {
-          board?.querySelector(`[row="${computer.array[0]}"][col="${computer.array[1]}"]`)?.classList.remove("bg-green-500");
-          board?.querySelector(`[row="${computer.array[0]}"][col="${computer.array[1]}"]`)?.classList.add("bg-red-500");
+        const computerSquare = board?.querySelector(`[row="${computer.array[0]}"][col="${computer.array[1]}"]`);
+  
+        if (computerSquare?.classList.contains("bg-green-500")) {
+          computerSquare.classList.remove("bg-green-500");
+          computerSquare.classList.add("bg-red-500");
         } else {
-          board?.querySelector(`[row="${computer.array[0]}"][col="${computer.array[1]}"]`)?.classList.add("bg-gray-500");
+          computerSquare?.classList.add("bg-gray-500");
         }
         resolve();
       })

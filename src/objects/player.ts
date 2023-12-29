@@ -20,46 +20,48 @@ export const createPlayer = (gameboard: Gameboard): Player => {
 // Computer player -> extends player
 export const createComputer = (gameboard: Gameboard): Computer => {
   const useCoordinates: { row: number; col: number }[] = [];
-  let attack: { row: number; col: number; };
   const availableCoordinates = getAvailableCoordinates();
-  const array1: number[] = [];
+  let attack: { row: number; col: number };
 
-    if (availableCoordinates.length > 0) {
-      const randomIndex = Math.floor(
-        Math.random() * availableCoordinates.length
-      );
-      const { row, col } = availableCoordinates[randomIndex];
-      useCoordinates.push({ row, col });
-      attack = { row, col };
-    } else {
-      console.log("No available coordinates");
+    // Function to return the coordinates of the atacked ship
+    const getAttackCoordinates = (): { row: number; col: number } => {
+      if (availableCoordinates.length > 0) {
+        const randomIndex = Math.floor(
+          Math.random() * availableCoordinates.length
+        );
+        attack = availableCoordinates[randomIndex];
+
+        if (useCoordinates.includes(attack)) {
+          return getAttackCoordinates();
+        } else {
+          useCoordinates.push(attack);
+        }
+      } else {
+        console.log("No available coordinates");
+      }
+      return attack;
     }
 
   return {
     attack(): void {
+      this.array = [];
+      let attack = getAttackCoordinates();
+      this.array.push(attack.row, attack.col);
       gameboard.receiveAttack(attack.row, attack.col);
-      array1.push(attack.row, attack.col);
     },
-    array: array1
+    array: [],
   };
 };
 
-// Obtain available coordinates
+// Obtain all coordinates
 function getAvailableCoordinates(): { row: number; col: number }[] {
   const allCoordinates: { row: number; col: number }[] = [];
 
   for (let row = 0; row < 10; row++) {
     for (let col = 0; col < 10; col++) {
       
-      const isUsed = allCoordinates.some(
-        (element) =>
-          element.row === row &&
-          element.col === col
-      );
+      allCoordinates.push({ row, col });
 
-      if (!isUsed) {
-        allCoordinates.push({ row, col });
-      }
     }
   }
   return allCoordinates;

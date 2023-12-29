@@ -1,5 +1,5 @@
 import { gameLayout } from "./pages/gameLayout";
-import { startGame, readyToStart } from "./pages/startGame";
+import { startGame, readyToStart, restart } from "./pages/startGame";
 import { createGameboard, Gameboard } from "./objects/gameboard";
 import { createPlayer, createComputer } from "./objects/player";
 import { createShip } from "./objects/ship";
@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const computer = createComputer(playerGameboard);
 
   // Place the ships on the player's gameboard
-  for (let i = 1; i < 2; i++) {
+  for (let i = 1; i < 6; i++) {
     // Change to test -> in place of 2 is 6 normaly
     // Return length of ship and if it is vertical
     let length: any = await returnShipPosition();
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  for (let i = 1; i < 2; i++) {
+  for (let i = 1; i < 6; i++) {
     // Change to test -> in place of 2 is 6 normaly
     // Return length of ship and if it is vertical
     let array: number[][] = [];
@@ -85,34 +85,38 @@ document.addEventListener("DOMContentLoaded", async () => {
       rowColArray[1],
       isVertical
     );
-    displayShips(  //-> Uncomment if you want to see where the ships of the computer are placed  
+    /*displayShips(  //Comment if you don't want to see where the ships of the computer are placed  
       computerBoard,
       ship,
       rowColArray[0],
       rowColArray[1],
       isVertical
-    );
+    ); */
   }
 
   await readyToStart().then( async () => {
     console.log("readyToStart ended");
     let gameOver = false;
-    alert("Choose your target!");
+    setTimeout(() => alert("Choose your target!"), 1000);
 
     while (!gameOver) {
        
     await playGame(computerBoard, player, computer).then( async () => {
-      if (computerGameboard.areAllShipsSunk() === true) {
+      
+      if (computerGameboard.areAllShipsSunk() == true) {
         alert("You win!");
         gameOver = true;
+        restart();
       }
       await playGame(playerBoard, player, computer).then(() => {
-        if (playerGameboard.areAllShipsSunk() === true) {
+        
+        if (playerGameboard.areAllShipsSunk() == true) {
           alert("Computer win!");
           gameOver = true;
+          restart();
         }
       })
-    }) 
+    })
     }
   });
 });

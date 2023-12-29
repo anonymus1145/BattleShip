@@ -1,6 +1,6 @@
 export type Ship = {
   length: number;
-  coordinates: { row: number; col: number }[];
+  coordinates: { row: number; col: number };
   hits: number;
   isSunk: boolean;
   hit(): void;
@@ -9,7 +9,7 @@ export type Ship = {
 export const createShip = (length: number): Ship => {
   return {
     length: length,
-    coordinates: [] as { row: number; col: number }[],
+    coordinates: { row: 0, col: 0 },
     hits: 0,
     isSunk: false,
     hit() {
